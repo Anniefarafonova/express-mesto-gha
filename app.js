@@ -28,6 +28,10 @@ app.use((req, res, next) => {
 app.use('/', usersRout);
 app.use('/', cardsRout);
 
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Произошла ошибка' });
+});
+
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
   // eslint-disable-next-line no-console
