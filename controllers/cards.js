@@ -34,7 +34,6 @@ module.exports.getCards = (req, res) => {
 
 // функция удаления карточк
 module.exports.deleteCardsID = (req, res) => {
-  // if (req.params.сardId.length === 24) {
   Card.findByIdAndRemove(req.params.сardId)
     .then(() => res.send({ message: 'Карточка удалена.' }))
     .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }));
