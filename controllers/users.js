@@ -1,3 +1,4 @@
+// const mongoose = require('mongoose');
 const User = require('../model/user');
 
 // функция создание юзера
@@ -34,7 +35,7 @@ module.exports.getUsersId = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(400).send({ message: 'Переданы некорректные данные' });
       }
     });
 };

@@ -36,7 +36,7 @@ module.exports.getCards = (req, res) => {
 module.exports.deleteCardsID = (req, res) => {
   Card.findByIdAndRemove(req.params.сardId)
     .then(() => res.send({ message: 'Карточка удалена.' }))
-    .catch(() => res.status(400).send({ message: 'Карточка с указанным _id не найдена.' }));
+    .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }));
 };
 
 // функция лайк
