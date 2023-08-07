@@ -25,7 +25,7 @@ module.exports.getCards = (req, res) => {
     .then((сard) => res.send(сard))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: ' Переданы некорректные данные при создании пользователя.' });
+        res.status(400).send({ message: ' Переданы некорректные данные.' });
       } else {
         res.status(500).send({ message: 'Произошла ошибка' });
       }
@@ -34,38 +34,44 @@ module.exports.getCards = (req, res) => {
 
 // функция удаления карточк
 module.exports.deleteCardsID = (req, res) => {
-  Card.findByIdAndRemove(req.params.сardId)
-    .then(() => res.send({ message: 'Карточка удалена.' }))
-    .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }));
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      // eslint-disable-next-line no-console
+      console.log(card);
+      if (!card) {
+        console.log(card);
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+        return;
+      }
+      res.send({ message: 'Карточка удалена.' });
+    })
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные' }));
 };
 
 // функция лайк
 module.exports.putCardsIdLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  // eslint-disable-next-line max-len
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true, runValidators: true })
     .populate(['owner', 'likes'])
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' });
-      } else {
-        res.status(404).send({ message: 'Передан несуществующий _id карточки' });
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+        return;
       }
+      res.send(card);
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' }));
 };
 // функция удаления лайк
 module.exports.deleteCardsIDLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .populate(['owner', 'likes'])
     .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+        return;
+      }
       res.send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' });
-      } else {
-        res.status(404).send({ message: 'Передан несуществующий _id карточки' });
-      }
-    })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' }));
 };

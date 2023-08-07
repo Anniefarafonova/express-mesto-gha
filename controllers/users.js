@@ -39,9 +39,9 @@ module.exports.getUsersId = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
-      } else {
         res.status(400).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
       }
     });
 };
