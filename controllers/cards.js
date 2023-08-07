@@ -39,6 +39,7 @@ module.exports.deleteCardsID = (req, res) => {
       // eslint-disable-next-line no-console
       console.log(card);
       if (!card) {
+        // eslint-disable-next-line no-console
         console.log(card);
         res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
         return;
