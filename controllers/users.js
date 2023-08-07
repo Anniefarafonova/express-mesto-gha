@@ -30,7 +30,13 @@ module.exports.getUsers = (req, res) => {
 // функция возвр. пользователя по _id
 module.exports.getUsersId = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send(user))
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
+        return;
+      }
+      res.send(user);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
@@ -43,13 +49,13 @@ module.exports.getUsersId = (req, res) => {
 // функция обновления профиля
 module.exports.patchUsers = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
+        res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
       }
     });
 };
@@ -58,13 +64,13 @@ module.exports.patchUsers = (req, res) => {
 module.exports.patchUsersAvatar = (req, res) => {
   // получим из объекта запроса имя и описание пользователя
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
+        res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(404).send({ message: ' Пользователь по указанному _id не найден.' });
       }
     });
 };
