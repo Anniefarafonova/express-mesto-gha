@@ -18,5 +18,5 @@
 
 
 
-[**Ссылка на репозиторий **](express-mesto-gha)
+[**Ссылка на репозиторий **](https://github.com/Anniefarafonova/express-mesto-gha)
  
