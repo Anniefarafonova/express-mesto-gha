@@ -56,7 +56,6 @@ module.exports.patchUsers = (req, res) => {
 
 // функция обновления аватарки
 module.exports.patchUsersAvatar = (req, res) => {
-  // получим из объекта запроса имя и описание пользователя
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.send(user))
