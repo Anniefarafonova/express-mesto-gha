@@ -45,8 +45,8 @@ module.exports.deleteCardsID = (req, res) => {
       res.send({ message: 'Карточка удалена.' });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(badRequestError).send({ message: 'Переданы некорректные данные при создании карточки' });
+      if (err.name === 'CastError') {
+        res.status(badRequestError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(internalServerError).send({ message: 'Произошла ошибка' });
       }
@@ -58,7 +58,7 @@ module.exports.putCardsIdLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true, runValidators: true },
+    { new: true },
   )
     // .populate(['owner', 'likes'])
     .then((card) => {
@@ -69,8 +69,8 @@ module.exports.putCardsIdLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(badRequestError).send({ message: 'Переданы некорректные данные при создании карточки' });
+      if (err.name === 'CastError') {
+        res.status(badRequestError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(internalServerError).send({ message: 'Произошла ошибка' });
       }
@@ -88,8 +88,8 @@ module.exports.deleteCardsIDLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(badRequestError).send({ message: 'Переданы некорректные данные при создании карточки' });
+      if (err.name === 'CastError') {
+        res.status(badRequestError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(internalServerError).send({ message: 'Произошла ошибка' });
       }
