@@ -24,7 +24,6 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send(user))
     .catch(() => {
-      res.status(badRequestError).send({ message: 'Переданы некорректные данные' });
       res.status(internalServerError).send({ message: 'Произошла ошибка' });
     });
 };

@@ -29,7 +29,6 @@ module.exports.getCards = (req, res) => {
     .populate(['owner', 'likes'])
     .then((сard) => res.send(сard))
     .catch(() => {
-      res.status(badRequestError).send({ message: ' Переданы некорректные данные.' });
       res.status(internalServerError).send({ message: 'Произошла ошибка' });
     });
 };
@@ -39,7 +38,7 @@ module.exports.deleteCardsID = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+        res.status(notFoundError).send({ message: 'Карточка с указанным _id не найдена.' });
         return;
       }
       res.send({ message: 'Карточка удалена.' });
