@@ -47,21 +47,19 @@ module.exports.deleteCardsID = (req, res, next) => {
         .orFail()
         .then(() => {
           res.send({ message: 'Карточка удалена.' });
-          console.log('cardd');
         })
         .catch((err) => {
           if (err instanceof mongoose.Error.DocumentNotFoundError) {
             next(new NotFoundError('Пользователь по указанному _id не найден.'));
-            console.log('NotFoundError');
-            console.log(err);
           } else if (err instanceof mongoose.Error.CastError) {
             next(new BadRequestError('Переданы некорректные данные.'));
-            console.log('BadRequestError');
-            console.log(err);
           } else {
             next(err);
           }
         });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
