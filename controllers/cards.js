@@ -38,7 +38,6 @@ module.exports.getCards = (req, res, next) => {
 module.exports.deleteCardsID = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
-      console.log('card');
       if (!card.owner.equals(req.user._id)) {
         throw new ForbiddenError('Карточка другого пользователя.');
         // next(new ForbiddenError('Карточка другого пользователя.'));
@@ -59,7 +58,11 @@ module.exports.deleteCardsID = (req, res, next) => {
         });
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'TypeError') {
+        next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      } else {
+        next(err);
+      }
     });
 };
 
