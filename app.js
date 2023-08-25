@@ -7,6 +7,7 @@ const usersRout = require('./routes/users');
 const cardsRout = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const regex = require('./model/constRegular');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { postUsers, login } = require('./controllers/users');
 
@@ -43,6 +44,10 @@ app.post('/signup', celebrate({
 app.use(auth);
 app.use('/', usersRout);
 app.use('/', cardsRout);
+
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
+});
 
 // обработчики ошибок
 app.use(errors()); // обработчик ошибок celebrate
