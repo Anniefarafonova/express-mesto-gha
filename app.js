@@ -7,7 +7,7 @@ const usersRout = require('./routes/users');
 const cardsRout = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const regex = require('./model/constRegular');
-const NotFoundError = require('./errors/NotFoundError');
+// const NotFoundError = require('./errors/NotFoundError');
 
 const { postUsers, login } = require('./controllers/users');
 
@@ -46,7 +46,7 @@ app.use('/', usersRout);
 app.use('/', cardsRout);
 
 app.use('*', (req, res) => {
-  res.status(NotFoundError).send({ message: 'Произошла ошибка' });
+  res.status(404).send({ message: 'Произошла ошибка' });
 });
 
 // обработчики ошибок
