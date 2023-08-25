@@ -1,5 +1,5 @@
+const httpConstants = require('http2').constants;
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
 const Card = require('../model/card');
 
 const BadRequestError = require('../errors/BadRequestError');
@@ -10,7 +10,9 @@ const ForbiddenError = require('../errors/ForbiddenError');
 module.exports.postCards = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((сard) => res.send(сard))
+    .then((сard) => {
+      res.status(httpConstants.HTTP_STATUS_CREATED).send(сard);
+    })
     //   Card.findById(сard._id)
     //     .populate('owner')
     //     .then((data) => res.status(201).send(data));
@@ -28,7 +30,9 @@ module.exports.postCards = (req, res, next) => {
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
-    .then((сard) => res.send(сard))
+    .then((сard) => {
+      res.status(httpConstants.HTTP_STATUS_OK).send(сard);
+    })
     .catch((err) => {
       next(err);
     });
@@ -45,7 +49,7 @@ module.exports.deleteCardsID = (req, res, next) => {
       Card.findByIdAndRemove(card)
         .orFail()
         .then(() => {
-          res.send({ message: 'Карточка удалена.' });
+          res.status(httpConstants.HTTP_STATUS_OK).send({ message: 'Карточка удалена.' });
         })
         .catch((err) => {
           if (err instanceof mongoose.Error.DocumentNotFoundError) {
@@ -76,7 +80,7 @@ module.exports.putCardsIdLike = (req, res, next) => {
     // .populate(['owner', 'likes'])
     .orFail()
     .then((card) => {
-      res.send(card);
+      res.status(httpConstants.HTTP_STATUS_OK).send(card);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
@@ -94,7 +98,7 @@ module.exports.deleteCardsIDLike = (req, res, next) => {
     .orFail()
     .populate(['owner', 'likes'])
     .then((card) => {
-      res.send(card);
+      res.status(httpConstants.HTTP_STATUS_OK).send(card);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {

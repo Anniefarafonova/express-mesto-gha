@@ -1,3 +1,4 @@
+const httpConstants = require('http2').constants;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -18,7 +19,7 @@ module.exports.postUsers = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash, // записываем хеш в базу
     }))
-    .then((user) => res.send({
+    .then((user) => res.status(httpConstants.HTTP_STATUS_CREATED).send({
       name: user.name,
       about: user.about,
       avatar: user.avatar,
@@ -37,7 +38,9 @@ module.exports.postUsers = (req, res, next) => {
 // функция возвр всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send(user))
+    .then((user) => {
+      res.status(httpConstants.HTTP_STATUS_OK).send(user);
+    })
     .catch((err) => {
       next(err);
     });
@@ -47,7 +50,7 @@ module.exports.getUsersId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => {
-      res.send(user);
+      res.status(httpConstants.HTTP_STATUS_OK).send(user);
     })
     // .catch((err) => {
     //   if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -73,7 +76,7 @@ module.exports.patchUsers = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
-      res.send(user);
+      res.status(httpConstants.HTTP_STATUS_OK).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -92,7 +95,7 @@ module.exports.patchUsersAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
-      res.send(user);
+      res.status(httpConstants.HTTP_STATUS_OK).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
