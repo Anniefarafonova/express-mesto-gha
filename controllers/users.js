@@ -18,8 +18,12 @@ module.exports.postUsers = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash, // записываем хеш в базу
     }))
-    .then((user) => res.send(user))
-    // ({name:user.name, about:user.about, avatar:user.avatar, email:user.email})
+    .then((user) => res.send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictingRequest('Пользователь с таким email уже существует'));
