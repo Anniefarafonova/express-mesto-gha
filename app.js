@@ -49,8 +49,8 @@ app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
 
-// обработчики ошибок
-app.use(errors()); // обработчик ошибок celebrate
+// обработчики ошибок celebrate
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
